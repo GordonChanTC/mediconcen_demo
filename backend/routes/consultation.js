@@ -40,18 +40,24 @@ async (req, res) => {
 
         // Diagnosis
         const dSql = `SELECT DIAGNOSIS_NAME
-                        FROM CONSULTATION_DIAGNOSIS cd
-                        LEFT JOIN DIAGNOSIS_INFO di ON cd.DIAGNOSIS_ID=di.DIAGNOSIS_ID 
-                    WHERE cd.CONSULTATION_ID=${req.params.id}`;
+                            FROM CONSULTATION_DIAGNOSIS cd
+                            LEFT JOIN DIAGNOSIS_INFO di ON cd.DIAGNOSIS_ID=di.DIAGNOSIS_ID 
+                        WHERE cd.CONSULTATION_ID=${req.params.id}`;
         const dResult = await query(dSql);
 
         // Medication
         const mSql = `SELECT MEDICATION_NAME, UNIT, AMOUNT 
-                        FROM CONSULTATION_MEDICATION cm
-                        LEFT JOIN MEDICATION_INFO mi ON cm.MEDICATION_ID=mi.MEDICATION_ID
-                        LEFT JOIN MEDICATION_UNIT mu ON mi.MEDICATION_UNIT_ID=mu.MEDICATION_UNIT_ID
-                    WHERE cm.CONSULTATION_ID=${req.params.id}`;
+                            FROM CONSULTATION_MEDICATION cm
+                            LEFT JOIN MEDICATION_INFO mi ON cm.MEDICATION_ID=mi.MEDICATION_ID
+                            LEFT JOIN MEDICATION_UNIT mu ON mi.MEDICATION_UNIT_ID=mu.MEDICATION_UNIT_ID
+                        WHERE cm.CONSULTATION_ID=${req.params.id}`;
         const mResult = await query(mSql);
+
+        // Follow up consultation
+        const fuSql = `SELECT NEXT_CONSULTATION_ID
+                        FROM CONSULTATION_FOLLOW_UP cfu
+                        WHERE cfu.CONSULTATION_ID=${req.params.id}`;
+        const fuResult = await query(fuSql);
         
         const detail = {
             consultationId: result[0].CONSULTATION_ID,
@@ -61,7 +67,8 @@ async (req, res) => {
             dateTime: result[0].DATE_TIME,
             consultationFee: result[0].CONSULTATION_FEE,
             diagnosis: dResult.map(x => x.DIAGNOSIS_NAME) ?? [],
-            medication: mResult.map(x => [x.MEDICATION_NAME, x.AMOUNT, x.UNIT]) ?? []
+            medication: mResult.map(x => [x.MEDICATION_NAME, x.AMOUNT, x.UNIT]) ?? [],
+            followUp: fuResult[0]?.NEXT_CONSULTATION_ID ?? null
         };
 
         return res.status(200).send(detail);
