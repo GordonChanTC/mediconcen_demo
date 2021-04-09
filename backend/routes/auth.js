@@ -8,11 +8,6 @@ const jwt = require('jsonwebtoken');
 
 const query = util.promisify(con.query).bind(con);
 
-router.get('/test', async (req,res) => { 
-    
-    console.log('test'); res.status(200).send('Hi'); 
-})
-
 router.post('/register', 
 async (req,res) => {
 
