@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import LoginContext from './LoginContext';
 import LoginErrorDialog from './LoginErrorDialog';
+import { LoginPost } from '../../api/Api';
 
 const Login = props => {
     const [loginState, LoginDispatch] = useContext(LoginContext);
@@ -14,16 +15,17 @@ const Login = props => {
     const adminPassword = '123456';
 
     const validateLogin = () => {
-        if (username === adminUsername && password === adminPassword) {
-            LoginDispatch({ type: 'LOGIN' });
-            // props.navigation.navigate('Home');
-            props.navigation.dispatch(StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({ routeName: 'Home' })]
-            }));
-        } else {
-            setLoginErrorDialogOpen(true);
-        }
+        // if (username === adminUsername && password === adminPassword) {
+        //     LoginDispatch({ type: 'LOGIN' });
+        //     // props.navigation.navigate('Home');
+        //     props.navigation.dispatch(StackActions.reset({
+        //         index: 0,
+        //         actions: [NavigationActions.navigate({ routeName: 'Home' })]
+        //     }));
+        // } else {
+        //     setLoginErrorDialogOpen(true);
+        // }
+        LoginPost(username, password);
     }
 
     const onCloseLoginErrorDialog = () => {
