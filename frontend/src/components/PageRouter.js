@@ -3,11 +3,13 @@ import { createStackNavigator } from 'react-navigation-stack';
 import DetailPage from './Detail/DetailPage';
 import Home from './FlatList/Home';
 import Login from './Login/Login';
+import Register from './Register/Register';
 
 const PageRouter = createStackNavigator({
     Login: Login,
+    Register: Register,
     Home: Home,
     Detail: DetailPage
-}, { initialRouteName: 'Home' });
+}, { initialRouteName: 'Login' });
 
 export default createAppContainer(PageRouter);

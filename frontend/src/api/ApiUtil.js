@@ -43,7 +43,22 @@ const post = async (URL = "", headers = {}, body = "", signal) => {
 
 const postAuth = async (URL = "", headers = {}, body = "", signal) => post(URL, authorizedHeader('token')(headers), body, signal);
 
+const get = async (URL = "") => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const res = await fetch(URL, {method: 'GET'});
+
+            const data = await resHandler(res);
+            resolve({ status: res.status , data: data });
+        
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
 export {
     post,
-    postAuth
+    postAuth,
+    get
 };

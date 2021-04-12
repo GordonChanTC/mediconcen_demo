@@ -3,11 +3,11 @@ import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import LoginContext from './LoginContext';
 import LoginErrorDialog from './LoginErrorDialog';
-import { LoginPost } from '../../api/Api';
+import { PostLogin } from '../../api/AuthApi';
 
 const Login = props => {
     const [loginState, LoginDispatch] = useContext(LoginContext);
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginErrorDialogOpen, setLoginErrorDialogOpen] = useState(false);
 
@@ -25,13 +25,17 @@ const Login = props => {
         // } else {
         //     setLoginErrorDialogOpen(true);
         // }
-        LoginPost(username, password);
+        PostLogin(email, password);
     }
 
     const onCloseLoginErrorDialog = () => {
         setLoginErrorDialogOpen(false);
     }
  
+    const onClickRegisterButton = () => {
+        props.navigation.navigate('Register');
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.text}>
@@ -41,10 +45,10 @@ const Login = props => {
                 <View style={styles.textInputContainer}>
                     <TextInput 
                         style={styles.textInput}
-                        value={username}
-                        onChangeText={setUsername}
+                        value={email}
+                        onChangeText={setEmail}
                         autoCapitalize='none'
-                        placeholder="username"
+                        placeholder="email"
                     />
                 </View>
                 <View style={styles.textInputContainer}>
@@ -60,6 +64,11 @@ const Login = props => {
                     style={styles.loginButton}
                     title="Login"
                     onPress={validateLogin}
+                />
+                <Button
+                    style={styles.loginbutton}
+                    title="Register"
+                    onPress={onClickRegisterButton}
                 />
             </View>
 
