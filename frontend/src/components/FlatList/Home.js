@@ -5,13 +5,13 @@ import FlatListContainer from './FlatListContainer';
 import SearchBar from './SearchBar';
 import SlideMenu from 'react-native-side-menu-updated';
 import HomeSideMenu from './HomeSideMenu';
-import LoginContext from '../Login/LoginContext';
+import TokenContext from '../../token/Context';
 
 const Home = props => {
     const [list, setList] = useState([]);
 	const [searchType, setSearchType] = useState("id");
 	const [search, setSearch] = useState("");
-	const [loginState, loginDispatch] = useContext(LoginContext);
+	const [loginState, loginDispatch] = useContext(TokenContext);
 
 	useEffect(() => {
 		getData();

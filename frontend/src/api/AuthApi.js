@@ -1,8 +1,9 @@
-import { post, postAuth } from './ApiUtil';
+import { post } from './ApiUtil';
+import { usePost } from './HttpClient';
 
 const url = 'http://192.168.1.139:3000';
 
-const PostLogin = async (email, password) => {
+const postLogin = async (email, password) => {
     const user = {
         email: email,
         password: password
@@ -21,26 +22,17 @@ const PostLogin = async (email, password) => {
     console.log(data);
 }
 
-const PostRegister = async (email, password, clinicId, phoneNum, address) => {
-    const newUser = {
-        email: email,
-        password: password,
-        clinicId: clinicId,
-        phoneNum: phoneNum,
-        address: address
-    };
+const useRegister = () => {
+    const url = '/api/user/register';
+    const defaultResData = {};
 
-    const { status, data } = await post(
-        url + '/api/user/register',
-        { 'Content-Type': 'application/json' },
-        JSON.stringify(newUser)
-    );
+    const [res, httpSend] = usePost(defaultResData);
+    const postRegister = payload => httpSend({ url: url, payload: payload });
 
-    console.log(status);
-    console.log(data);
+    return [res, postRegister];
 }
 
 export {
-    PostLogin,
-    PostRegister
+    postLogin,
+    useRegister
 }

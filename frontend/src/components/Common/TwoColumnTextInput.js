@@ -2,8 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
 
 const TwoColumnTextInput = props => {
-    console.log(props.isValid)
-
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>

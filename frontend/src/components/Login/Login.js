@@ -1,12 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
-import LoginContext from './LoginContext';
 import LoginErrorDialog from './LoginErrorDialog';
-import { PostLogin } from '../../api/AuthApi';
 
 const Login = props => {
-    const [loginState, LoginDispatch] = useContext(LoginContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginErrorDialogOpen, setLoginErrorDialogOpen] = useState(false);
@@ -25,7 +22,7 @@ const Login = props => {
         // } else {
         //     setLoginErrorDialogOpen(true);
         // }
-        PostLogin(email, password);
+        // postLogin(email, password);
     }
 
     const onCloseLoginErrorDialog = () => {
