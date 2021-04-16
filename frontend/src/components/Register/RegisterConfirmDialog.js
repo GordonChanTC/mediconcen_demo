@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'red'
     },
     dialogText: {
         fontSize: 28,

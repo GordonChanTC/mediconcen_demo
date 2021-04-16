@@ -3,7 +3,8 @@ import { StyleSheet, View, Text, FlatList } from 'react-native';
 import FlatListItem from './FlatListItem';
 
 const FlatListContainer = props => {
-    const searchResult = props.list.filter(data => `${data[props.searchType]}`.toLowerCase().indexOf(props.search.toLowerCase()) !== -1);
+    // const searchResult = props.list.filter(data => `${data[props.searchType]}`.toLowerCase().indexOf(props.search.toLowerCase()) !== -1);
+    const searchResult = props.list;
 
     const onPress = id => {
         const detail = props.list.filter(data => data.id === id)[0];
@@ -22,7 +23,7 @@ const FlatListContainer = props => {
                             renderItem={itemData => (
                                 <FlatListItem
                                     id={itemData.item.id}
-                                    title={itemData.item.title}
+                                    dateTime={itemData.item.dateTime}
                                     onPress={onPress}
                                 />
                             )}

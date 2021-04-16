@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { post, get } from './ApiUtil';
 import httpConfig from './HttpConfig';
-import { TokenContext } from '../token/Context';
+import { TokenContext } from '../token/Token';
 
 /**
  * Custom hook handle http response error logic
@@ -73,6 +73,7 @@ const formatResData = (data, defaultResData) => {
  */
 
 const usePost = (defaultResData) => {
+    const tokenStore = useContext(TokenContext);
     const [isFetching, setIsFetching] = useState(false);
     const [data, setData] = useState(defaultResData ?? {});
     const [isError, code, httpErrorParser] = useHttpError(); // Handle http response error logic
@@ -92,11 +93,11 @@ const usePost = (defaultResData) => {
 
                 setIsFetching(true);
 
-                const { status, data } = await post(
+                const { status, data, headers } = await post(
                     httpConfig.domain + url,
                     {
                         "Content-Type": "application/json",
-                        // "authorization": jwtStore.get(),  // Get JWT from JWT context storage, session storage, cookie storage
+                        "authorization": tokenStore.get(),
                     },
                     JSON.stringify(payload),
                     abortController.signal
@@ -110,7 +111,8 @@ const usePost = (defaultResData) => {
                     setIsFetching(false);
                     setData(formatResData(data, defaultResData));
                 } 
-                // if (data.authorization) jwtStore.set(data.authorization); // Store JWT to context storage, session storage, cookie storage
+                if (headers.authorization) tokenStore.set(headers.authorization);
+                console.log(tokenStore.get())
             } catch (err) {
                 console.error(err);
                 if (mounted) {
@@ -130,6 +132,7 @@ const usePost = (defaultResData) => {
 };
 
 const useGet = (defaultResData) => {
+    const tokenStore = useContext(TokenContext);
     const [isFetching, setIsFetching] = useState(false);
     const [data, setData] = useState(defaultResData ?? {});
     const [isError, code, httpErrorParser] = useHttpError(); // Handle http response error logic
@@ -152,7 +155,7 @@ const useGet = (defaultResData) => {
                 const { status, data } = await get(
                     httpConfig.domain + url,
                     {
-                        // "authorization": jwtStore.get(),  // Get JWT from JWT context storage, session storage, cookie storage
+                        "authorization": tokenStore.get(),
                     },
                     abortController.signal
                 );
@@ -165,7 +168,7 @@ const useGet = (defaultResData) => {
                     setIsFetching(false);
                     setData(formatResData(data, defaultResData));
                 } 
-                // if (data.authorization) jwtStore.set(data.authorization); // Store JWT to context storage, session storage, cookie storage
+                if (data.authorization) tokenStore.set(data.authorization);
             } catch (err) {
                 console.error(err);
                 if (mounted) {

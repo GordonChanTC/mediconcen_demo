@@ -21,7 +21,7 @@ const post = async (URL = "", headers = {}, body = "", signal) => {
             });
 
             const data = await resHandler(res);
-            resolve({ status: res.status , data: data });
+            resolve({ status: res.status , data: data, headers: res.headers.map });
         } catch (err) {
             reject(err);
         }

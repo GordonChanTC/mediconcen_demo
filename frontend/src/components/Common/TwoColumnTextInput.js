@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 const TwoColumnTextInput = props => {
     return (

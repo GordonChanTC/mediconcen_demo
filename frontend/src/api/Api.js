@@ -1,7 +1,8 @@
 import { useRegister } from './AuthApi';
-import { useClinics } from './DataApi';
+import { useClinics, useConsultations } from './DataApi';
 
 export {
     useRegister,
-    useClinics
+    useClinics, 
+    useConsultations
 };

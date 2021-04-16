@@ -1,9 +1,10 @@
 import React, { useReducer } from 'react';
-import TokenContext, { TokenInitState, TokenReducer } from './Context';
+import TokenContext from './Context';
+import TokenReducer, { TokenInitState } from './Reducer';
 
 const TokenStorage = Component => props => {
-    const [state, dispatch] = useReducer(TokenInitState, TokenReducer);
-   
+    const [state, dispatch] = useReducer(TokenReducer, TokenInitState);
+
     const get = () => {
         return state.token || '';
     };
@@ -21,7 +22,6 @@ const TokenStorage = Component => props => {
             <Component {...props} />
         </TokenContext.Provider>
     );
-    
 };
 
 export default TokenStorage;

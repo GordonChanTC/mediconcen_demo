@@ -1,7 +1,7 @@
 import TokenStorage from './Storage';
-import JWTContext from './Context';
+import TokenContext from './Context';
 
 export {
     TokenStorage,
-    JWTContext
+    TokenContext
 }

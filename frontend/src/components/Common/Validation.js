@@ -4,7 +4,7 @@ const isEmail = email => {
 };
 
 const isPhone = phone => {
-    const re = /^[569][0-9]{7}$/;
+    const re = /^(852)?[0-9]{8}$/;
     return re.test(parseInt(phone));
 }
 

@@ -45,7 +45,6 @@ const Register = props => {
     }, []);
 
     useEffect(() => {
-        console.log(clinicsRes);
         setClinics(list => [...list, ...clinicsRes.data.list]);
     }, [clinicsRes.data.list]);
 
@@ -53,7 +52,8 @@ const Register = props => {
         if (registerRes.code === 200) {
             setIsConfirmDialogOpen(true);
             confirmTimoutId.current = setTimeout(() => {
-                console.log('1 second');
+                props.navigation.goBack();
+                setIsConfirmDialogOpen(false);
             }, 1000);
         } else {
             if (registerRes.data.field) {
@@ -69,12 +69,19 @@ const Register = props => {
     const passwdNotMatchErrorMsg = () => `Two passwords didn't match`
 
     const onClickSubmitButton = () => {
+        // postRegister({
+        //     email: 'admin@mediconcen.com',
+        //     password: '123123',
+        //     clinicId: 1,
+        //     phoneNum: '98765432',
+        //     address: 'ABC'
+        // })
         postRegister({
-            email: 'admin@mediconcen.com',
-            password: '123123',
-            clinicId: 1,
-            phoneNum: '98765432',
-            address: 'ABC'
+            email: email,
+            password: passwd,
+            clinicId: clinicId,
+            phoneNum: phone,
+            address: address
         })
     };
 
