@@ -1,12 +1,25 @@
 const router = require('express').Router();
 const verify = require('../verifyToken');
-const mysql = require('mysql'); 
+const mysql = require('mysql');
 const con = require('../db');
 const util = require('util');
 
 const query = util.promisify(con.query).bind(con);
 
-router.get('/', verify, 
+router.get('/clinics',
+async (req, res) => {
+    try {
+        console.log('get clinics');
+
+        const sql = 'SELECT CLINIC_ID as id, CLINIC_NAME as name FROM CLINIC_INFO';
+        const result = await query(sql);
+        return res.status(200).send({ list: result });
+    } catch(err) {
+        return res.status(500).send(err);
+    }
+})
+
+router.get('/consultation', verify, 
 async (req, res) => {
     try {
         console.log(req.email)
@@ -15,17 +28,17 @@ async (req, res) => {
         const cResult = await query(cSql);
         console.log(cResult)
 
-        const sql = `SELECT CONSULTATION_ID, DATE_TIME FROM CONSULTATION_INFO WHERE CLINIC_ID=${cResult[0].clinicId};`;
+        const sql = `SELECT CONSULTATION_ID as id, DATE_TIME as dateTime FROM CONSULTATION_INFO WHERE CLINIC_ID=${cResult[0].clinicId};`;
         const result = await query(sql);
         console.log(result[0]);
-        return res.status(200).send(result);
+        return res.status(200).send({ list: result });
     } catch(err) {
         console.log(err);
         return res.status(500).send(err);
     }
 })
 
-router.get('/:id', verify,
+router.get('/consultation/:id', verify,
 async (req, res) => {
     try {
         // Consultation Detail
@@ -76,7 +89,5 @@ async (req, res) => {
         return res.status(500).send(err);
     }
 })
-
-
 
 module.exports = router;

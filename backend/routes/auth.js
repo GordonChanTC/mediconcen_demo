@@ -21,7 +21,7 @@ async (req,res) => {
         const result = await query(sql);
         console.log(result[0].Amount);
         if(result[0].Amount > 0) {
-            return res.status(400).send({"message": "Account already exist!"});
+            return res.status(400).send({"field": "email", "message": "Account already exist"});
         }
     } catch(err) {
         console.log(err);
@@ -37,6 +37,7 @@ async (req,res) => {
         EMAIL: req.body.email,
         ENCRYPTED_PASSWORD: hashedPassword,
         PHONE_NO: req.body.phoneNum,
+        CLINIC_ID: req.body.clinicId,
         ADDRESS: req.body.address
     };
 
@@ -56,6 +57,8 @@ async (req,res) => {
 
 router.post('/login', 
 async (req,res) => {
+    console.log(req);
+
     //input validation
     const { error } = loginValidation(req.body);
     if(error) return res.status(400).send({'message': error.details[0].message});
@@ -86,7 +89,7 @@ async (req,res) => {
             //Create and assign a token
             const token = jwt.sign({sub: result[0].EMAIL, Roles: "ROLE_USER", exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24)}, process.env.JWT_SECRET);
             res.header('Authorization', "Bearer "+ token);
-            return res.status(200).send({"message": "Logged in!"});
+            return res.status(200).send({ "message": "Logged in!", "verified": true });
         }
     } catch(err) {
         console.log(err);

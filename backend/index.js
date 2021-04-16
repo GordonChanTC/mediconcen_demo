@@ -5,6 +5,7 @@ const app = express();
 const authRoute = require('./routes/auth');
 const acctMRoute = require('./routes/acctManagement')
 const consultationRoute = require('./routes/consultation')
+const getDataRoute = require('./routes/getData')
 
 //Middleware
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use('/api/user', authRoute);
 app.use('/api/user', acctMRoute);
 app.use('/api/consultation', consultationRoute);
+app.use('/api/data', getDataRoute);
 
 
 app.listen(3000, () => console.log('Server up and running'));

@@ -6,7 +6,7 @@ module.exports = function auth(req, res, next) {
 
     try{
         const validToken = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
-        req.username = validToken.sub;
+        req.email = validToken.sub;
         next();
     } catch(err) {
         return res.status(403).send({"message": "Invalid Token!"});

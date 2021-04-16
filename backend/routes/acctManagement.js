@@ -9,7 +9,7 @@ const query = util.promisify(con.query).bind(con);
 router.get('/personalinfo', verify, 
 async (req,res) => {
     try {
-        var sql = 'SELECT * FROM REGISTERED_USER WHERE USER_NAME = ' + mysql.escape(req.username);
+        var sql = 'SELECT * FROM USER_INFO WHERE EMAIL = ' + mysql.escape(req.email);
         const result  = await query(sql);
         console.log(result[0]);
         const user = {
