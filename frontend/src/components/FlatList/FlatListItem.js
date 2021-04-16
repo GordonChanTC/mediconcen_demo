@@ -6,9 +6,7 @@ const FlatListItem = props => {
         <TouchableOpacity style={styles.item} onPress={() => props.onPress(props.id)}>
             <View style={styles.infoContainer}>
                 <Text style={styles.text}>
-                    {`ID:    ${props.id}`}
-                    {`\n`}
-                    {`Title: ${props.title}`}
+                    {`Date: ${props.dateTime}`}
                 </Text>
             </View>
             <View style={styles.arrowContainer}>

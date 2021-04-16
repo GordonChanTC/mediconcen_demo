@@ -1,6 +1,4 @@
 
-const authorizedHeader = token => header => ({ ...header, Authorization: token });
-
 const resHandler = async (res) => {
     return new Promise(async (resolve, reject) => {
         try {          
@@ -12,16 +10,6 @@ const resHandler = async (res) => {
     });
 };
 
-/**
- * Custom Fetch API post method
- * * * *
- * @param {string}  URL
- * @param {Object} headers
- * @param {string}  body
- * @param {Object} signal
- * 
- * @return {Object} { status, data }
- */
 const post = async (URL = "", headers = {}, body = "", signal) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -33,24 +21,24 @@ const post = async (URL = "", headers = {}, body = "", signal) => {
             });
 
             const data = await resHandler(res);
-            resolve({ status: res.status , data: data });
-        
+            resolve({ status: res.status , data: data, headers: res.headers.map });
         } catch (err) {
             reject(err);
         }
     });
 }
 
-const postAuth = async (URL = "", headers = {}, body = "", signal) => post(URL, authorizedHeader('token')(headers), body, signal);
-
-const get = async (URL = "") => {
+const get = async (URL = "", headers = {}, signal) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const res = await fetch(URL, {method: 'GET'});
+            const res = await fetch(URL, {
+                method: 'GET',
+                headers: headers,
+                signal: signal
+            });
 
             const data = await resHandler(res);
             resolve({ status: res.status , data: data });
-        
         } catch (err) {
             reject(err);
         }
@@ -59,6 +47,5 @@ const get = async (URL = "") => {
 
 export {
     post,
-    postAuth,
     get
 };

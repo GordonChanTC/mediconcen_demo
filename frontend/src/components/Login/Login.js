@@ -1,20 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
-import LoginContext from './LoginContext';
+import { useLogin } from '../../api/AuthApi';
+import RectButton from '../Common/RectButton';
+import TwoColumnTextInput from '../Common/TwoColumnTextInput';
 import LoginErrorDialog from './LoginErrorDialog';
-import { PostLogin } from '../../api/AuthApi';
 
 const Login = props => {
-    const [loginState, LoginDispatch] = useContext(LoginContext);
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [passwd, setPasswd] = useState('');
     const [loginErrorDialogOpen, setLoginErrorDialogOpen] = useState(false);
 
-    const adminUsername = 'admin';
-    const adminPassword = '123456';
+    const [loginRes, postLogin] = useLogin();
 
-    const validateLogin = () => {
+    useEffect(() => {
         // if (username === adminUsername && password === adminPassword) {
         //     LoginDispatch({ type: 'LOGIN' });
         //     // props.navigation.navigate('Home');
@@ -25,16 +24,35 @@ const Login = props => {
         // } else {
         //     setLoginErrorDialogOpen(true);
         // }
-        PostLogin(email, password);
+        console.log(loginRes)
+        if (loginRes.code == 200) {
+            if (loginRes.data.verified) {
+                props.navigation.dispatch(StackActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({ routeName: 'Home' })]
+                }));
+            }
+        } else {
+            console.log('error')
+        }
+    }, [loginRes.data]);
+
+    const onClickLoginButton = () => {
+        postLogin({
+            email: email,
+            password: passwd
+        })
     }
 
     const onCloseLoginErrorDialog = () => {
         setLoginErrorDialogOpen(false);
     }
- 
+
     const onClickRegisterButton = () => {
         props.navigation.navigate('Register');
     }
+
+    const isAllInputNotEmpty = (email.length && passwd.length) !== 0;
 
     return (
         <View style={styles.container}>
@@ -42,34 +60,43 @@ const Login = props => {
                 Login
             </Text>
             <View style={styles.loginBlockContainer}>
-                <View style={styles.textInputContainer}>
-                    <TextInput 
-                        style={styles.textInput}
-                        value={email}
-                        onChangeText={setEmail}
-                        autoCapitalize='none'
-                        placeholder="email"
+                <TwoColumnTextInput
+                    key="email"
+                    title="Email"
+                    isValid
+                    textInput={
+                        <TextInput
+                            style={styles.textInput}
+                            value={email}
+                            onChangeText={setEmail}
+                            autoCapitalize='none'
+                        />
+                    }
+                />
+                <TwoColumnTextInput
+                    key="passwd"
+                    title="Password"
+                    isValid
+                    textInput={
+                        <TextInput
+                            style={styles.textInput}
+                            secureTextEntry={true}
+                            value={passwd}
+                            onChangeText={setPasswd}
+                        />
+                    }
+                />
+                <View style={styles.buttonContainer}>
+                    <RectButton
+                        title="Login"
+                        onPress={onClickLoginButton}
+                        disabled={!isAllInputNotEmpty}
+                    />
+                    <RectButton
+                        title="Register"
+                        onPress={onClickRegisterButton}
                     />
                 </View>
-                <View style={styles.textInputContainer}>
-                    <TextInput 
-                        style={styles.textInput}
-                        secureTextEntry={true}
-                        value={password}
-                        onChangeText={setPassword}
-                        placeholder="password"
-                    />
-                </View>
-                <Button
-                    style={styles.loginButton}
-                    title="Login"
-                    onPress={validateLogin}
-                />
-                <Button
-                    style={styles.loginbutton}
-                    title="Register"
-                    onPress={onClickRegisterButton}
-                />
             </View>
 
             <LoginErrorDialog visible={loginErrorDialogOpen} onClose={onCloseLoginErrorDialog} />
@@ -85,13 +112,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     loginBlockContainer: {
-        width: '60%',
+        width: '80%',
         paddingTop: 10,
     },
     text: {
         fontSize: 36,
     },
-    textInputContainer: {
+    inputContainer: {
         width: '100%',
         marginTop: 12,
         marginBottom: 12,
@@ -102,9 +129,14 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%',
-        fontSize: 28,
-        textAlign: 'center',
+        fontSize: 24,
+        textAlign: 'left',
     },
+    buttonContainer: {
+        width: '100%',
+        flex: 1,
+        alignItems: 'center',
+    }
 });
 
 export default Login;
