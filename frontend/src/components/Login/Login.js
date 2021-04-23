@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useLogin } from '../../api/AuthApi';
 import RectButton from '../Common/RectButton';
-import TwoColumnTextInput from '../Common/TwoColumnTextInput';
+import TwoRowTextInput from '../Common/TwoRowTextInput';
 import LoginErrorDialog from './LoginErrorDialog';
 
 const Login = props => {
@@ -60,7 +60,7 @@ const Login = props => {
                 Login
             </Text>
             <View style={styles.loginBlockContainer}>
-                <TwoColumnTextInput
+                <TwoRowTextInput
                     key="email"
                     title="Email"
                     isValid
@@ -73,7 +73,7 @@ const Login = props => {
                         />
                     }
                 />
-                <TwoColumnTextInput
+                <TwoRowTextInput
                     key="passwd"
                     title="Password"
                     isValid

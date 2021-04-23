@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, TextInput, View, ScrollView } from 'react-native';
-import { useClinics, useRegister } from '../../api/Api';
+import { useRegister } from '../../api/Api';
 import { Picker } from '@react-native-picker/picker';
-import TwoColumnTextInput from '../Common/TwoColumnTextInput';
+import TwoRowTextInput from '../Common/TwoRowTextInput';
 import TwoColumnPicker from '../Common/TwoColumnPicker';
 import LoadingMask from '../Common/LoadingMask';
 import RectButton from '../Common/RectButton';
@@ -21,12 +21,8 @@ const Register = props => {
     const [email, setEmail] = useState('');
     const [passwd, setPasswd] = useState('');
     const [rePasswd, setRePasswd] = useState('');
-    const [clinicId, setClinicId] = useState(1);
     const [phone, setPhoneNum] = useState('');
     const [address, setAddress] = useState('');
-
-    const [clinicsRes, getClinics] = useClinics(); 
-    const [clinics, setClinics] = useState([]);
 
     const [isValid, setIsValid] = useState(Array(5).fill(true));
     const [errMsg, setErrMsg] = useState(Array(5).fill(''));
@@ -37,16 +33,10 @@ const Register = props => {
     let confirmTimoutId = useRef(); 
 
     useEffect(() => {
-        getClinics();
-
         return () => {
             clearTimeout(confirmTimoutId.current);
         } 
     }, []);
-
-    useEffect(() => {
-        setClinics(list => [...list, ...clinicsRes.data.list]);
-    }, [clinicsRes.data.list]);
 
     useEffect(() => {
         if (registerRes.code === 200) {
@@ -69,17 +59,9 @@ const Register = props => {
     const passwdNotMatchErrorMsg = () => `Two passwords didn't match`
 
     const onClickSubmitButton = () => {
-        // postRegister({
-        //     email: 'admin@mediconcen.com',
-        //     password: '123123',
-        //     clinicId: 1,
-        //     phoneNum: '98765432',
-        //     address: 'ABC'
-        // })
         postRegister({
             email: email,
             password: passwd,
-            clinicId: clinicId,
             phoneNum: phone,
             address: address
         })
@@ -166,7 +148,7 @@ const Register = props => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.inputContainer}>
-                <TwoColumnTextInput
+                <TwoRowTextInput
                     key="email"
                     title="Email"
                     isValid={isValid[RegisterField.email]}
@@ -182,7 +164,7 @@ const Register = props => {
                         />
                     }
                 />
-                <TwoColumnTextInput 
+                <TwoRowTextInput 
                     key="password"
                     title="Password"
                     isValid={isValid[RegisterField.passwd]}
@@ -198,7 +180,7 @@ const Register = props => {
                         />
                     }
                 />
-                <TwoColumnTextInput 
+                <TwoRowTextInput 
                     key="repassword"
                     title="Re-enter Password"
                     isValid={isValid[RegisterField.rePasswd]}
@@ -214,20 +196,7 @@ const Register = props => {
                         />
                     }
                 />
-                <TwoColumnPicker
-                    title="Clinic"
-                    picker={
-                        <Picker
-                            style={styles.picker}
-                            itemStyle={styles.pickerItem}
-                            selectedValue={clinicId}
-                            onValueChange={setClinicId}
-                        >
-                            {clinics ? clinics.map((item, index) => <Picker.Item key={index} label={item.name} value={item.id} />) : null}
-                        </Picker>
-                    }
-                />
-                <TwoColumnTextInput
+                <TwoRowTextInput
                     key="phone"
                     title="Phone Number"
                     isValid={isValid[RegisterField.phone]}
@@ -242,7 +211,7 @@ const Register = props => {
                         />
                     }
                 />
-                <TwoColumnTextInput
+                <TwoRowTextInput
                     key="address"
                     title="Address"
                     isValid={isValid[RegisterField.address]}
@@ -265,7 +234,7 @@ const Register = props => {
                 />
             </View>
             
-            <LoadingMask visible={clinicsRes.isFetching || registerRes.isFetching} />
+            <LoadingMask visible={registerRes.isFetching} />
             <RegisterConfirmDialog visible={isConfirmDialogOpen} />
         </ScrollView>
     );

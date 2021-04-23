@@ -1,4 +1,4 @@
-import { useGet } from './HttpClient';
+import { useGet, usePost } from './HttpClient';
 
 const useConsultations = () => {
     const url = '/api/data/consultation';
@@ -6,25 +6,32 @@ const useConsultations = () => {
         list: []
     }
 
-    const [res, httpSend] = useGet(defaultResData);
-    const getConsultation = () => httpSend({ url: url });
+    const [res, httpSend] = usePost(defaultResData);
+    const postConsultation = payload => httpSend({ url: url, payload: payload });
 
-    return [res, getConsultation];
+    return [res, postConsultation];
 }
 
-const useClinics = () => {
-    const url = '/api/data/clinics';
+const useConsultationDetail = id => {
+    const url = '/api/data/consultation/' + id;
     const defaultResData = {
-        list: []
+        consultationId: 0,
+        doctorName: '',
+        patientName: '',
+        dateTime: '',
+        consultationFee: '',
+        diagnosis: [],
+        medication: [],
+        followUp: []
     };
 
     const [res, httpSend] = useGet(defaultResData);
-    const getClinic = () => httpSend({ url: url });
+    const postConsultationDetail = () => httpSend({ url: url });
 
-    return [res, getClinic];
+    return [res, postConsultationDetail];
 }
 
 export {
-    useClinics,
-    useConsultations
+    useConsultations,
+    useConsultationDetail 
 };

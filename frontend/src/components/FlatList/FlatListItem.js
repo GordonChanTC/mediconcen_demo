@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { dateFormat } from '../../util/Util';
 
 const FlatListItem = props => {
     return (
         <TouchableOpacity style={styles.item} onPress={() => props.onPress(props.id)}>
             <View style={styles.infoContainer}>
                 <Text style={styles.text}>
-                    {`Date: ${props.dateTime}`}
+                    {dateFormat(props.dateTime)}
                 </Text>
             </View>
             <View style={styles.arrowContainer}>

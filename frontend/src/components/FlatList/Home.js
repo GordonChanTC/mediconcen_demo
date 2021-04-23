@@ -5,99 +5,53 @@ import FlatListContainer from './FlatListContainer';
 import SearchBar from './SearchBar';
 import SlideMenu from 'react-native-side-menu-updated';
 import HomeSideMenu from './HomeSideMenu';
-import TokenContext from '../../token/Context';
 import { useConsultations } from '../../api/DataApi';
+import { getDayRange, getWeekRange, getMonthRange } from '../../util/Util';
 
-// const Home = props => {
-//     const [list, setList] = useState([]);
-// 	const [searchType, setSearchType] = useState("id");
-// 	const [search, setSearch] = useState("");
-// 	const [loginState, loginDispatch] = useContext(TokenContext);
-
-// 	useEffect(() => {
-// 		getData();
-// 	}, []);
-
-// 	useEffect(() => {
-// 		setSearch("");
-// 	}, [searchType]);
-
-// 	useEffect(() => {
-// 		onSearch(search);
-// 	}, [search]);
-
-// 	const getData = async () => {
-// 		await fetch('https://jsonplaceholder.typicode.com/posts')
-// 				.then(response => response.json())
-// 				.then(data => setList(data))
-// 				.catch(error => console.error(error));
-// 	}
-
-// 	const onSetSearchType = type => {
-// 		if (type !== searchType) {
-// 			setSearch("");
-// 		}
-// 		setSearchType(type);
-// 	}
-
-// 	const onSetSearch = search => {
-// 		setSearch(search);
-// 	}
-
-// 	const onSearch = search => {
-// 		setSearch(search);
-// 	}
-
-// 	const onLogout = () => {
-//         loginDispatch({ type: 'LOGOUT' });
-//         props.navigation.dispatch(StackActions.reset({
-// 			index: 0,
-// 			actions: [NavigationActions.navigate({ routeName: 'Login' })]
-// 		}));
-//     };
-
-// 	return (
-// 		<SlideMenu menu={<HomeSideMenu username={loginState.username} onLogout={onLogout} />}>
-// 			<View style={styles.container}>
-// 				{/* <SearchBar 
-// 					searchType={searchType}
-// 					search={search}
-// 					setSearchType={onSetSearchType}
-// 					setSearch={onSetSearch}
-// 					onSearch={onSearch} 
-// 				/>
-// 				<FlatListContainer 
-// 					{...props}
-// 					list={list} 
-// 					searchType={searchType} 
-// 					search={search} 
-// 					onOpenPostDetail={props.onOpenPostDetail}
-// 				/> */}
-// 				<Text>Home</Text>
-// 			</View>
-// 		</SlideMenu>
-// 	)
-// }
+const DateFilter = Object.freeze({
+	Day: 0,
+	Week: 1,
+	Month: 2
+});
 
 const Home = props => {
-	const [consRes, getCons] = useConsultations();
+	const [consRes, postCons] = useConsultations();
+	const [date, setDate] = useState(new Date());
+	const [dateFilter, setDateFilter] =  useState(DateFilter.Day);
 	const [consultations, setConsultations] = useState([]);
 
 	useEffect(() => {
-		getCons();
-	}, []);
+		let [start, end] = [date, date];
+		switch (dateFilter) {
+			case DateFilter.Day:
+			default:
+				[start, end] = getDayRange(date);
+				break;
+			case DateFilter.Week:
+				[start, end] = getWeekRange(date);
+				break;
+			case DateFilter.Month:
+				[start, end] = getMonthRange(date);
+				break;
+		};
+		console.log(start.getTime(), end.getTime());
+		postCons({ start: start.getTime(), end: end.getTime() });
+	}, [date]);
 
 	useEffect(() => {
-		console.log(consRes)
-		setConsultations(list => [...list, ...consRes.data.list]);
+		setConsultations([...consRes.data.list]);
 	}, [consRes.data.list]);
+
+	const onClickListItem = (id) => {
+		props.navigation.navigate('Detail', { id: id });
+	}
 
 	return (
 		<View style={styles.container}>
 			<FlatListContainer 
 				{...props}
 				list={consultations} 
-				onOpenPostDetail={props.onOpenPostDetail}
+				onClick={onClickListItem}
 			/>
 		</View>
 	)

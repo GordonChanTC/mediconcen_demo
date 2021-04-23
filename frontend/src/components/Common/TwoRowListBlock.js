@@ -1,24 +1,26 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
-const TwoColumnTextInput = props => {
+const TwoRowListBlock = props => {
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>{props.title}</Text>
             </View>
-            <View style={[styles.textInputContainer, !props.isValid ? styles.textInputError : null]}>
-                {props.textInput}
-            </View>
-            <View>
-                <Text style={styles.errorMsgText}>{props.errorMsg}</Text>
+            <View style={styles.textContainer}>
+                {props.list.map(item => (
+                    <Text style={styles.text}>
+                        {`- ${item}`}
+                    </Text>
+                ))}
             </View>
         </View>
     )
-}
+};
 
 const styles = StyleSheet.create({
     container: {
+        width: '100%',
         paddingBottom: 12
     },
     titleContainer: {
@@ -26,24 +28,19 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     title: {
-        fontSize: 24
+        fontSize: 32,
+        fontWeight: 'bold'
     },
-    textInputContainer: {
+    textContainer: {
         width: '100%',
         marginTop: 12,
         marginBottom: 12,
         paddingBottom: 2,
-        borderBottomWidth: 1,
-        borderBottomColor: 'black',
-        alignItems: 'center',
+        textAlign: 'left'
     },
-    textInputError: {
-        borderBottomColor: 'red'
-    },
-    errorMsgText: {
-        fontSize: 18,
-        color: 'red'
+    text: {
+        fontSize: 24
     }
 })
 
-export default TwoColumnTextInput;
+export default TwoRowListBlock;

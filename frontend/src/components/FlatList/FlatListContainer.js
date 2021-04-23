@@ -3,36 +3,24 @@ import { StyleSheet, View, Text, FlatList } from 'react-native';
 import FlatListItem from './FlatListItem';
 
 const FlatListContainer = props => {
-    // const searchResult = props.list.filter(data => `${data[props.searchType]}`.toLowerCase().indexOf(props.search.toLowerCase()) !== -1);
-    const searchResult = props.list;
-
-    const onPress = id => {
-        const detail = props.list.filter(data => data.id === id)[0];
-
-        props.navigation.navigate('Detail', { ...detail });
-    }
-
     return (
         <React.Fragment>
             {
                 props.list.length > 0 ?
                     <View style={styles.container}>
                         <FlatList
-                            keyExtractor={(data, index) => data.id.toString()}
-                            data={searchResult}
+                            keyExtractor={data => data.id.toString()}
+                            data={props.list}
                             renderItem={itemData => (
                                 <FlatListItem
                                     id={itemData.item.id}
-                                    dateTime={itemData.item.dateTime}
-                                    onPress={onPress}
+                                    dateTime={new Date(itemData.item.dateTime)}
+                                    onPress={props.onClick}
                                 />
                             )}
                         />
                     </View>
-                :
-                    <Text>
-                        fetching data... 
-                    </Text>
+                :   <View></View>
             }
         </React.Fragment>
     )
