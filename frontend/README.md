@@ -1,1 +1,0 @@
-# mediconcen_demo
