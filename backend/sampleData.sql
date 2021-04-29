@@ -73,20 +73,23 @@ VALUES
 ('Antipyretic', 1),
 ('Cough Drop', 1),
 ('Cough Syrup', 2),
-('Painkiller', 1);
+('Painkiller', 1),
+('Antidiarrheal', 2);
 
 -- Consultation
 INSERT INTO CONSULTATION_INFO (DOCTOR_ID, PATIENT_ID, DATE_TIME, CONSULTATION_FEE)
 VALUES
 (1, 1, 1609613743000, 300),
-(3, 4, 1609899327000, 300),
+(3, 4, 1609899327000, 250),
 (2, 6, 1609900314000, 350),
--- (1, 1, 1609913520000, 300),
-(1, 1, 1619491716000, 300),
-(1, 3, 1618882964000, 300),
-(1, 4, 1619491816000, 300);
+(1, 1, 1613098216000, 220),
+(3, 2, 1613099095000, 300),
+(4, 1, 1613098216000, 350),
+(1, 3, 1618882964000, 240),
+(4, 1, 1619491816000, 240);
 
 -- Consultation-Diagnosis
+
 INSERT INTO CONSULTATION_DIAGNOSIS (CONSULTATION_ID, DIAGNOSIS_ID)
 VALUES
 (1, 1),
@@ -94,7 +97,13 @@ VALUES
 (2, 2),
 (3, 1),
 (3, 3),
-(4, 1);
+(4, 1),
+(5, 1),
+(5, 2),
+(6, 4),
+(7, 1),
+(7, 3),
+(8, 6);
 
 -- Consultation-Medication
 INSERT INTO CONSULTATION_MEDICATION (CONSULTATION_ID, MEDICATION_ID, AMOUNT)
@@ -102,13 +111,20 @@ VALUES
 (1, 4, 25),
 (1, 5, 90),
 (2, 6, 60),
+(3, 3, 30),
 (3, 4, 25),
-(3, 5, 90),
 (3, 2, 30),
-(4, 4, 25);
+(4, 4, 25),
+(5, 3, 30),
+(5, 5, 90),
+(6, 6, 60),
+(7, 3, 30),
+(7, 4, 25),
+(7, 2, 30),
+(8, 7, 30);
 
 -- Follow Up
 INSERT INTO CONSULTATION_FOLLOW_UP (CONSULTATION_ID, NEXT_CONSULTATION_ID)
 VALUES
 (1, 4),
-(4, 6);
+(6, 8);
