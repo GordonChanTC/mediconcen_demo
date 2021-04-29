@@ -1,18 +1,19 @@
 const Joi = require('@hapi/joi');
+const { JsonWebTokenError } = require('jsonwebtoken');
 
-//Register Validation
-const registerValidation = (data) => {
+// Register Validation
+const registerValidation = data => {
     const schema = {
         email: Joi.string().min(6).required().email(),
         password: Joi.string().min(6).required(),
-        clinicId: Joi.number().required(),
         phoneNum: Joi.string().min(8).required(),
         address: Joi.string().required()
     };
     return Joi.validate(data, schema);
 }
 
-const loginValidation = (data) => {
+// Login Validation
+const loginValidation = data => {
     const schema = {
         email: Joi.string().min(6).required().email(),
         password: Joi.string().min(6).required()
@@ -20,5 +21,15 @@ const loginValidation = (data) => {
     return Joi.validate(data, schema);
 }
 
+// Consultation Validation
+const consultationValidation = data => {
+    const schema = {
+        start: Joi.number().required(),
+        end: Joi.number().required()
+    };
+    return Joi.validate(data, schema);
+}
+
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
+module.exports.consultationValidation = consultationValidation;

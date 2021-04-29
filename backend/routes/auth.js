@@ -37,7 +37,6 @@ async (req,res) => {
         EMAIL: req.body.email,
         ENCRYPTED_PASSWORD: hashedPassword,
         PHONE_NO: req.body.phoneNum,
-        CLINIC_ID: req.body.clinicId,
         ADDRESS: req.body.address
     };
 
@@ -65,7 +64,7 @@ async (req,res) => {
 
     //Check if username exist
     try {
-        var sql = 'SELECT COUNT(*) AS Amount FROM USER_INFO WHERE EMAIL = ' + mysql.escape(req.body.email);
+        const sql = `SELECT COUNT(*) AS Amount FROM USER_INFO WHERE EMAIL=${mysql.escape(req.body.email)}`;
         const result  = await query(sql);
         console.log(result[0].Amount);
         if(result[0].Amount == 0) {
@@ -78,7 +77,7 @@ async (req,res) => {
 
     //Find the password from database
     try {
-        var sql = 'SELECT * FROM USER_INFO WHERE EMAIL = ' + mysql.escape(req.body.email);
+        var sql = `SELECT * FROM USER_INFO WHERE EMAIL=${mysql.escape(req.body.email)}`;
         const result  = await query(sql);
         console.log(result[0].ENCRYPTED_PASSWORD);
         //Check password
