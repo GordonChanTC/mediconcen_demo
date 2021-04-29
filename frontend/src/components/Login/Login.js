@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Button, SafeAreaView } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { useLogin } from '../../api/AuthApi';
+import { useLogin } from '../../api/Api';
 import RectButton from '../Common/RectButton';
 import TwoRowTextInput from '../Common/TwoRowTextInput';
 import LoginErrorDialog from './LoginErrorDialog';
+import LoadingMask from '../Common/LoadingMask';
 
 const Login = props => {
     const [email, setEmail] = useState('');
@@ -14,17 +15,7 @@ const Login = props => {
     const [loginRes, postLogin] = useLogin();
 
     useEffect(() => {
-        // if (username === adminUsername && password === adminPassword) {
-        //     LoginDispatch({ type: 'LOGIN' });
-        //     // props.navigation.navigate('Home');
-        //     props.navigation.dispatch(StackActions.reset({
-        //         index: 0,
-        //         actions: [NavigationActions.navigate({ routeName: 'Home' })]
-        //     }));
-        // } else {
-        //     setLoginErrorDialogOpen(true);
-        // }
-        console.log(loginRes)
+        console.log(loginRes);
         if (loginRes.code == 200) {
             if (loginRes.data.verified) {
                 props.navigation.dispatch(StackActions.reset({
@@ -33,7 +24,9 @@ const Login = props => {
                 }));
             }
         } else {
-            console.log('error')
+            if (loginRes.data.message) {
+                setLoginErrorDialogOpen(true);
+            }
         }
     }, [loginRes.data]);
 
@@ -55,10 +48,12 @@ const Login = props => {
     const isAllInputNotEmpty = (email.length && passwd.length) !== 0;
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>
-                Login
-            </Text>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                    {`Mediconcen Clinic`}
+                </Text>
+            </View>
             <View style={styles.loginBlockContainer}>
                 <TwoRowTextInput
                     key="email"
@@ -99,8 +94,9 @@ const Login = props => {
                 </View>
             </View>
 
+            <LoadingMask visible={loginRes.isFetching} />
             <LoginErrorDialog visible={loginErrorDialogOpen} onClose={onCloseLoginErrorDialog} />
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -115,8 +111,11 @@ const styles = StyleSheet.create({
         width: '80%',
         paddingTop: 10,
     },
-    text: {
-        fontSize: 36,
+    titleContainer: {
+        padding: 15
+    },
+    title: {
+        fontSize: 36
     },
     inputContainer: {
         width: '100%',
@@ -134,8 +133,9 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         width: '100%',
-        flex: 1,
+        flexDirection: 'row', 
         alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

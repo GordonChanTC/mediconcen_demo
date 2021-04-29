@@ -1,5 +1,5 @@
 const httpConfig = Object.freeze({
-    domain: 'http://192.168.1.139:3000'
+    domain: 'http://192.168.1.136:3000'
 });
 
 export default httpConfig;

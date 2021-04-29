@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, TextInput, View, ScrollView } from 'react-native';
+import { StyleSheet, TextInput, View, ScrollView, SafeAreaView } from 'react-native';
 import { useRegister } from '../../api/Api';
-import { Picker } from '@react-native-picker/picker';
 import TwoRowTextInput from '../Common/TwoRowTextInput';
-import TwoColumnPicker from '../Common/TwoColumnPicker';
 import LoadingMask from '../Common/LoadingMask';
 import RectButton from '../Common/RectButton';
 import { isEmail, isPhone } from '../Common/Validation';
@@ -40,11 +38,11 @@ const Register = props => {
 
     useEffect(() => {
         if (registerRes.code === 200) {
-            setIsConfirmDialogOpen(true);
-            confirmTimoutId.current = setTimeout(() => {
-                props.navigation.goBack();
-                setIsConfirmDialogOpen(false);
-            }, 1000);
+            // setIsConfirmDialogOpen(true);
+            // confirmTimoutId.current = setTimeout(() => {
+            //     props.navigation.goBack();
+            //     setIsConfirmDialogOpen(false);
+            // }, 1000);
         } else {
             if (registerRes.data.field) {
                 setErrorHint(RegisterField[registerRes.data.field], false, registerRes.data.message);
@@ -55,7 +53,7 @@ const Register = props => {
     const emptyFieldErrorMsg = field => `Enter ${field}`;
     const emptyRePasswdErrorMsg = () => `Confirm your password`;
     const invalidErrorMsg = field => `Invalid ${field}`;
-    const notEnoughLengthErrorMsg = (field, minLen) => `Use ${minLen} or more for your ${field}`;
+    const notEnoughLengthErrorMsg = (field, minLen) => `Use at least ${minLen} characters for your ${field}`;
     const passwdNotMatchErrorMsg = () => `Two passwords didn't match`
 
     const onClickSubmitButton = () => {
@@ -140,137 +138,129 @@ const Register = props => {
         setErrorHint(RegisterField.address, error.length == 0, error);
     };
 
-    // const isAllInputNotEmpty = (email.length && passwd.length && rePasswd.length && phone.length && address.length) !== 0;
-    // const isAllInputValid = isValid.reduce((a, b) => a && b);
-    const isAllInputNotEmpty = true;
-    const isAllInputValid = true;
+    const isAllInputNotEmpty = () => (email.length && passwd.length && rePasswd.length && phone.length && address.length) !== 0;
+    const isAllInputValid = () => isValid.reduce((a, b) => a && b);
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <View style={styles.inputContainer}>
-                <TwoRowTextInput
-                    key="email"
-                    title="Email"
-                    isValid={isValid[RegisterField.email]}
-                    errorMsg={errMsg[RegisterField.email]}
-                    textInput={
-                        <TextInput 
-                            style={styles.textInput}
-                            value={email}
-                            onChangeText={setEmail}
-                            autoCapitalize='none'
-                            onFocus={() => setErrorHint(RegisterField.email)}
-                            onBlur={validateEmail}
-                        />
-                    }
-                />
-                <TwoRowTextInput 
-                    key="password"
-                    title="Password"
-                    isValid={isValid[RegisterField.passwd]}
-                    errorMsg={errMsg[RegisterField.passwd]}
-                    textInput={
-                        <TextInput 
-                            style={styles.textInput}
-                            secureTextEntry={true}
-                            value={passwd}
-                            onChangeText={setPasswd}
-                            onFocus={() => setErrorHint(RegisterField.passwd)}
-                            onBlur={validatePasswd}
-                        />
-                    }
-                />
-                <TwoRowTextInput 
-                    key="repassword"
-                    title="Re-enter Password"
-                    isValid={isValid[RegisterField.rePasswd]}
-                    errorMsg={errMsg[RegisterField.rePasswd]}
-                    textInput={
-                        <TextInput 
-                            style={styles.textInput}
-                            secureTextEntry={true}
-                            value={rePasswd}
-                            onChangeText={setRePasswd}
-                            onFocus={() => setErrorHint(RegisterField.rePasswd)}
-                            onBlur={validateRepasswd}
-                        />
-                    }
-                />
-                <TwoRowTextInput
-                    key="phone"
-                    title="Phone Number"
-                    isValid={isValid[RegisterField.phone]}
-                    errorMsg={errMsg[RegisterField.phone]}
-                    textInput={
-                        <TextInput
-                            style={styles.textInput}
-                            value={phone}
-                            onChangeText={setPhoneNum}
-                            onFocus={() => setErrorHint(RegisterField.phone)}
-                            onBlur={validatePhone}
-                        />
-                    }
-                />
-                <TwoRowTextInput
-                    key="address"
-                    title="Address"
-                    isValid={isValid[RegisterField.address]}
-                    errorMsg={errMsg[RegisterField.address]}
-                    textInput={
-                        <TextInput
-                            style={styles.textInput}
-                            value={address}
-                            onChangeText={setAddress}
-                            autoCapitalize='none'
-                            onFocus={() => setErrorHint(RegisterField.address)}
-                            onBlur={validateAddress}
-                        />
-                    }
-                />
-                <RectButton
-                    title="Sumbit"
-                    onPress={onClickSubmitButton}
-                    disabled={!(isAllInputNotEmpty && isAllInputValid)}
-                />
-            </View>
-            
-            <LoadingMask visible={registerRes.isFetching} />
-            <RegisterConfirmDialog visible={isConfirmDialogOpen} />
-        </ScrollView>
+        <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                <View style={styles.inputContainer}>
+                    <TwoRowTextInput
+                        key="email"
+                        title="Email"
+                        isValid={isValid[RegisterField.email]}
+                        errorMsg={errMsg[RegisterField.email]}
+                        textInput={
+                            <TextInput 
+                                style={styles.textInput}
+                                value={email}
+                                onChangeText={setEmail}
+                                autoCapitalize='none'
+                                onFocus={() => setErrorHint(RegisterField.email)}
+                                onBlur={validateEmail}
+                            />
+                        }
+                    />
+                    <TwoRowTextInput 
+                        key="password"
+                        title="Password"
+                        isValid={isValid[RegisterField.passwd]}
+                        errorMsg={errMsg[RegisterField.passwd]}
+                        textInput={
+                            <TextInput 
+                                style={styles.textInput}
+                                secureTextEntry={true}
+                                value={passwd}
+                                onChangeText={setPasswd}
+                                onFocus={() => setErrorHint(RegisterField.passwd)}
+                                onBlur={validatePasswd}
+                            />
+                        }
+                    />
+                    <TwoRowTextInput 
+                        key="repassword"
+                        title="Re-enter Password"
+                        isValid={isValid[RegisterField.rePasswd]}
+                        errorMsg={errMsg[RegisterField.rePasswd]}
+                        textInput={
+                            <TextInput 
+                                style={styles.textInput}
+                                secureTextEntry={true}
+                                value={rePasswd}
+                                onChangeText={setRePasswd}
+                                onFocus={() => setErrorHint(RegisterField.rePasswd)}
+                                onBlur={validateRepasswd}
+                            />
+                        }
+                    />
+                    <TwoRowTextInput
+                        key="phone"
+                        title="Phone Number"
+                        isValid={isValid[RegisterField.phone]}
+                        errorMsg={errMsg[RegisterField.phone]}
+                        textInput={
+                            <TextInput
+                                style={styles.textInput}
+                                value={phone}
+                                onChangeText={setPhoneNum}
+                                onFocus={() => setErrorHint(RegisterField.phone)}
+                                onBlur={validatePhone}
+                            />
+                        }
+                    />
+                    <TwoRowTextInput
+                        key="address"
+                        title="Address"
+                        isValid={isValid[RegisterField.address]}
+                        errorMsg={errMsg[RegisterField.address]}
+                        textInput={
+                            <TextInput
+                                style={styles.textInput}
+                                value={address}
+                                onChangeText={setAddress}
+                                autoCapitalize='none'
+                                onFocus={() => setErrorHint(RegisterField.address)}
+                                onBlur={validateAddress}
+                            />
+                        }
+                    />
+                    <RectButton
+                        title="Sumbit"
+                        onPress={onClickSubmitButton}
+                        disabled={!(isAllInputNotEmpty() && isAllInputValid())}
+                    />
+                </View>
+                
+                <LoadingMask visible={registerRes.isFetching} />
+                <RegisterConfirmDialog visible={isConfirmDialogOpen} />
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        width: '100%',
+        height: '100%',
+    },
+    scrollViewContainer: {
+        width: '80%',
         padding: 10,
-        flex: 1,
         flexDirection: 'column',
-        alignItems: 'center',
+        alignSelf: 'center',
     },
     text: {
         fontSize: 36,
     },
     inputContainer: {
-        width: '80%',
+        width: '100%',
         paddingTop: 10,
     },
     textInput: {
         width: '100%',
         fontSize: 24,
         textAlign: 'left',
-    },
-    picker: {
-        width: '100%',
-        height: 80,
-        color: 'black',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-    },
-    pickerItem: {
-        width: '100%',
-        height: '100%',
-    },
+    }
 })
 
 export default Register;

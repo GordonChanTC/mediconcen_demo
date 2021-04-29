@@ -112,7 +112,7 @@ const usePost = (defaultResData) => {
                     setData(formatResData(data, defaultResData));
                 } 
                 if (headers.authorization) tokenStore.set(headers.authorization);
-                console.log(tokenStore.get())
+                // console.log(tokenStore.get())
             } catch (err) {
                 console.error(err);
                 if (mounted) {

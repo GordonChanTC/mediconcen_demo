@@ -12,8 +12,8 @@ const useConsultations = () => {
     return [res, postConsultation];
 }
 
-const useConsultationDetail = id => {
-    const url = '/api/data/consultation/' + id;
+const useConsultationDetail = () => {
+    const url = '/api/data/consultation/';
     const defaultResData = {
         consultationId: 0,
         doctorName: '',
@@ -26,9 +26,9 @@ const useConsultationDetail = id => {
     };
 
     const [res, httpSend] = useGet(defaultResData);
-    const postConsultationDetail = () => httpSend({ url: url });
+    const getConsultationDetail = id => httpSend({ url: url + id });
 
-    return [res, postConsultationDetail];
+    return [res, getConsultationDetail];
 }
 
 export {

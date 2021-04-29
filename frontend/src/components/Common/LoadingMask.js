@@ -4,7 +4,11 @@ import Dialog, { DialogContent } from 'react-native-popup-dialog';
 
 const LoadingMask = props => {
     return (
-        <Dialog visible={props.visible} dialogStyle={styles.transparent}>
+        <Dialog 
+            visible={props.visible} 
+            dialogStyle={styles.transparent}
+            animationDuration={100}    
+        >
             <DialogContent>
                 <ActivityIndicator size='large' />
             </DialogContent>
